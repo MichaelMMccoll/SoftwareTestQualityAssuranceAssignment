@@ -14,6 +14,7 @@ In general, the CLI should fail gracefully (i.e., not throw uncaught exceptions)
 | UC004       | Enter a Historic Site | The user can enter the details of a historic site, including: A location for the historic site (A, B, or C); And an initial waste quantity. | The CLI has started and the user has selected the Configure/Run Scenario > Add Historic option. | Having created a historic site, the user is presented with the historic site created text (see Appendix D: Historic Site Created Text), followed by the scenario configuration options (see Appendix C: Scenario Options Text). |
 | UC005       | Enter Recycling Centres | The user can enter the details of multiple recycling centres. | The CLI has started and the user has selected the Configure/Run Scenario > Add Recycling Centres option. | Having created any number of Recycling Centres the user is presented with recycling centres created text (see Appendix E: Recycling Centres Created Text), followed by the scenario configuration options (see Appendix C: Scenario Options Text). |
 | UC006       | Run a Scenario | The user can run valid scenarios. | The CLI has started and the user has configured a valid scenario (i.e., at-least one historic site and at-least one recycling centre). | Having selected the Run Scenario option a user is presented with the results (see Appendix F: Scenario Completion Text), followed by the start-up options text (see Appendix A: Initial Options Text). |
+| UC007       | Exit | The user can exit the application. | The CLI has started and the user is not in the middle of configuring a scenario. | Having selected the Exit option the userr is presented with the exit text (see Appendix G: Exit Text). |
 
 ## Appendices
 
@@ -77,3 +78,10 @@ The total duration is therefore: 5250.00 hours.
 ---------------------------------------------
 ```
 
+### Appendix G: Exit Text
+
+```
+----------------------------------------
+End
+----------------------------------------
+```
