@@ -7,7 +7,7 @@ This repository contains the code for a Worker Service Prototype being developed
 To understand the contents of this repository, you should do the following (if you haven't already):
 
 1. Review the supplementary materials from 1CWK30. The *Spec* and *Memorandum of Understanding* documents in particular.
-2. Review the technical memo included in this repository. This describes the Command Line Interface through which the Worker Service Prototype is exposed.
+2. Review the [technical memo](./TechMemo.md) included in this repository. This describes the Command Line Interface through which the Worker Service Prototype is exposed.
 3. Familiarise yourself with the code itself; Use your understanding of the code to enhance your Test Case Design Specification.
 
 ## Getting started
