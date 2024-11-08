@@ -15,7 +15,7 @@ To understand the contents of this repository, you should do the following (if y
 At some point after you've familiarised yourself with the code and made a decent start on your Test Case Design Specification, you'll probably want to implement some automated tests to include with your submission. To do this, you should first clone the repository:
 
 1. Create a folder in the format: `Sam_Attwood_12345678` (but using your name and student number).
-2. Navigate inside this folder using your preferred terminal and run: `git clone https://github.com/samattwood9/6G6Z0035_2CWK70_2024.git`
+2. Navigate inside this folder using your preferred terminal and run: `git clone https://github.com/samattwood9/6G6Z0035_2CWK70_2024.git` (if you have a GitHub account you may wish to create your own remote and cloning that instead, you can click the use template button to do this).
 3. At this point, you should be able to open up the repository using IntelliJ and write automated tests just like we've been doing in the labs (consult the relevant lab worksheets if you're not sure). It's over to you... Good luck!
 
 ## Submitting your submission
