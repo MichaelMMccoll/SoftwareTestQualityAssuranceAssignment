@@ -2,12 +2,15 @@ import models.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,6 +50,7 @@ class UtilsTest {
     }
 
     //Test crashes when no Recycling center is given
+    //Should be changed to fail
     @Test
     @DisplayName("Finding optimal center with there are 0 types")
     void findOptimalCentre_When_C_0Centers() {
@@ -61,28 +65,24 @@ class UtilsTest {
 
     @ParameterizedTest
     @DisplayName("Calculates travel duration")
-    @CsvFileSource(resources = "/CalculateTravelDuration.csv")
-    void calculateTravelDuration(Character type, String location, Double initialWaste, Double expectedResponse)
+    @MethodSource("CalculateTravelDuration")
+    void calculateTravelDuration(Recycling type, Historic location, Double expectedResponse)
     {
         //Arrange
-        var recycle = GettingRecycling(type,1);
-        var aa = new Historic(GettingLocation(location),initialWaste);
         //Act
-        var response = util.calculateTravelDuration(aa,recycle);
+        var response = util.calculateTravelDuration(location,type);
         //Assert
         assertEquals(response, expectedResponse);
     }
 
     @ParameterizedTest
     @DisplayName("Calculates process duration")
-    @CsvFileSource(resources = "/CalculateProcessDuration.csv")
-    void calculateProcessDuration(Character type, String location, Double initialWaste, Double expectedResponse)
+    @MethodSource("CalculateProcessDuration")
+    void calculateProcessDuration(Recycling type, Historic location, Double expectedResponse)
     {
         //Arrange
-        var recycle = GettingRecycling(type,1);
-        var aa = new Historic(GettingLocation(location),initialWaste);
         //Act
-        var response = util.calculateProcessDuration(aa,recycle);
+        var response = util.calculateProcessDuration(location,type);
         //Assert
         assertEquals(response,expectedResponse);
     }
@@ -115,6 +115,22 @@ class UtilsTest {
             default -> null;
         };
     }
+
+    private static Stream<Arguments> CalculateTravelDuration(){
+        return Stream.of(
+                Arguments.of(new Alpha(Location.A,1), new Historic(Location.A,1251.0), 63.0),
+                Arguments.of(new Alpha(Location.A,1), new Historic(Location.B,1251.0), 126.0),
+                Arguments.of(new Alpha(Location.A,1), new Historic(Location.C,1251.0), 252.0)
+        );
+    }
+    private static Stream<Arguments> CalculateProcessDuration(){
+        return Stream.of(
+          Arguments.of(new Alpha(Location.A,1), new Historic(Location.A,1251.0), 1251.0),
+          Arguments.of(new Alpha(Location.A,1), new Historic(Location.B,1000.0), 1000.0),
+          Arguments.of(new Alpha(Location.A,1), new Historic(Location.C,1000.0), 1000.0)
+        );
+    }
+
     static Location GettingLocation(String selected)
     {
         return switch (selected) {
