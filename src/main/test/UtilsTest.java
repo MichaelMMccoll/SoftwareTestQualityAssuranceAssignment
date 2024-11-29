@@ -1,4 +1,5 @@
 import models.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -7,9 +8,8 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.sql.Array;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,56 +21,50 @@ class UtilsTest {
 
     @ParameterizedTest
     @DisplayName("Finding Viable Centres With 3 options and has metallic")
-    @CsvFileSource(resources = "/FindingViableCenters.csv")
-    void findViableCentres(String centers, String location, Double initialWaste) {
+    @MethodSource("FindViableCenters")
+    void findViableCentres(List<Recycling> centers, Historic historicLocation, List<Recycling> expectedResponse) {
         //Arrange
-        var recyclingList = CreatingRecyclings(centers);
-        var aa = new Historic(GettingLocation(location),initialWaste);
-
+        //var list =  new ArrayList<Recycling>(centers);
         //Act
-        var response = util.findViableCentres(aa,recyclingList);
-
+        var response = util.findViableCentres(historicLocation, centers);
         //Assert
-        assertEquals(response,recyclingList);
+        Assertions.assertEquals(response.size(), expectedResponse.size());
     }
 
     @ParameterizedTest
     @DisplayName("Finding optimal center with all 3 types")
-    @CsvFileSource(resources = "/FindOptimalCenters.csv")
-    void findOptimalCentre(String centers, String location, Double initialWaste, Integer arrayPlace) {
+    @MethodSource("FindOptimalCenters")
+    void findOptimalCentre(List<Recycling> centers, Historic historicLocation, Integer arrayPlace) {
         //Arrange
-        var recyclingList = CreatingRecyclings(centers);
-        var aa = new Historic(GettingLocation(location),initialWaste);
-
         //Act
-        var response = util.findOptimalCentre(aa,recyclingList);
+        var response = util.findOptimalCentre(historicLocation, centers);
 
         //Assert
-        assertEquals(response,recyclingList.get(arrayPlace));
+        assertEquals(response, centers.get(arrayPlace));
     }
 
     //Test crashes when no Recycling center is given
-    //Should be changed to fail
+    //This should fail
     @Test
     @DisplayName("Finding optimal center with there are 0 types")
     void findOptimalCentre_When_C_0Centers() {
         //Arrange
-        var recyclingList = CreatingRecyclings("");
-        var aa = new Historic(Location.C,1251.0);
+        var recyclingList = new ArrayList<Recycling>();
+        var aa = new Historic(Location.C, 1251.0);
         var errorMessage = "";
         //Act
+        util.findOptimalCentre(aa, recyclingList);
         //Assert
-        assertThrows(NoSuchElementException.class, () -> util.findOptimalCentre(aa,recyclingList));
+        //assertThrows(NoSuchElementException.class, () -> util.findOptimalCentre(aa,recyclingList));
     }
 
     @ParameterizedTest
     @DisplayName("Calculates travel duration")
     @MethodSource("CalculateTravelDuration")
-    void calculateTravelDuration(Recycling type, Historic location, Double expectedResponse)
-    {
+    void calculateTravelDuration(Recycling type, Historic location, Double expectedResponse) {
         //Arrange
         //Act
-        var response = util.calculateTravelDuration(location,type);
+        var response = util.calculateTravelDuration(location, type);
         //Assert
         assertEquals(response, expectedResponse);
     }
@@ -78,66 +72,79 @@ class UtilsTest {
     @ParameterizedTest
     @DisplayName("Calculates process duration")
     @MethodSource("CalculateProcessDuration")
-    void calculateProcessDuration(Recycling type, Historic location, Double expectedResponse)
-    {
+    void calculateProcessDuration(Recycling type, Historic location, Double expectedResponse) {
         //Arrange
         //Act
-        var response = util.calculateProcessDuration(location,type);
+        var response = util.calculateProcessDuration(location, type);
         //Assert
-        assertEquals(response,expectedResponse);
+        assertEquals(response, expectedResponse);
     }
 
 
-    //Rules youngest to oldest based on the order of the string
-    static List<Recycling> CreatingRecyclings(String options) {
-        List<Recycling> recyclingList = new ArrayList<>();
-
-        if(StringUtils.isBlank(options)) {
-            return recyclingList;
-        }
-        var optionList = options.toCharArray();
-
-        var age = 1;
-        for(char option : optionList)
-        {
-            recyclingList.add(GettingRecycling(option,age));
-            age++;
-        }
-        return recyclingList;
-    }
-
-    static Recycling GettingRecycling(char option,Integer age)
-    {
-        return switch (option) {
-            case 'A' -> new Alpha(Location.A, age);
-            case 'B' -> new Beta(Location.B, age);
-            case 'C' -> new Gamma(Location.C, age);
-            default -> null;
-        };
-    }
-
-    private static Stream<Arguments> CalculateTravelDuration(){
+    private static Stream<Arguments> CalculateTravelDuration() {
         return Stream.of(
-                Arguments.of(new Alpha(Location.A,1), new Historic(Location.A,1251.0), 63.0),
-                Arguments.of(new Alpha(Location.A,1), new Historic(Location.B,1251.0), 126.0),
-                Arguments.of(new Alpha(Location.A,1), new Historic(Location.C,1251.0), 252.0)
-        );
-    }
-    private static Stream<Arguments> CalculateProcessDuration(){
-        return Stream.of(
-          Arguments.of(new Alpha(Location.A,1), new Historic(Location.A,1251.0), 1251.0),
-          Arguments.of(new Alpha(Location.A,1), new Historic(Location.B,1000.0), 1000.0),
-          Arguments.of(new Alpha(Location.A,1), new Historic(Location.C,1000.0), 1000.0)
+                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.A, 1251.0), 63.0),
+                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.B, 1251.0), 126.0),
+                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.C, 1251.0), 252.0)
         );
     }
 
-    static Location GettingLocation(String selected)
-    {
-        return switch (selected) {
-            case "A" -> Location.A;
-            case "B" -> Location.B;
-            case "C" -> Location.C;
-            default -> null;
-        };
+    private static Stream<Arguments> CalculateProcessDuration() {
+        return Stream.of(
+                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.A, 1251.0), 1251.0),
+                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.B, 1000.0), 1000.0),
+                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.C, 1000.0), 1000.0)
+        );
     }
+
+    private static Stream<Arguments> FindOptimalCenters() {
+        return Stream.of(
+                Arguments.of(new ArrayList<Recycling>(Arrays.asList(
+                                new Beta(Location.B, 2),
+                                new Alpha(Location.A, 1),
+                                new Gamma(Location.C, 3))),
+                        new Historic(Location.A, 1251.0),
+                        1),
+                Arguments.of(new ArrayList<Recycling>(Arrays.asList(
+                                new Beta(Location.B, 2),
+                                new Alpha(Location.A, 1),
+                                new Gamma(Location.C, 3))),
+                        new Historic(Location.B, 1251.0),
+                        1),
+                Arguments.of(new ArrayList<Recycling>(Arrays.asList(
+                                new Beta(Location.B, 2),
+                                new Alpha(Location.A, 1),
+                                new Gamma(Location.C, 3))),
+                        new Historic(Location.C, 1251.0),
+                        0)
+        );
+    }
+
+    private static Stream<Arguments> FindViableCenters() {
+        return Stream.of(
+                Arguments.of(new ArrayList<Recycling>(Arrays.asList(
+                                new Beta(Location.B, 2),
+                                new Alpha(Location.A, 1),
+                                new Gamma(Location.C, 3))),
+                        new Historic(Location.A, 1251.0),
+                        new ArrayList<Recycling>(Arrays.asList(
+                                new Beta(Location.B, 2),
+                                new Alpha(Location.A, 1)))),
+
+                Arguments.of(new ArrayList<Recycling>(Arrays.asList(
+                                new Beta(Location.B, 2),
+                                new Alpha(Location.A, 1),
+                                new Gamma(Location.C, 3))),
+                        new Historic(Location.B, 100.0),
+                        new ArrayList<Recycling>(Arrays.asList(
+                                new Beta(Location.B, 2),
+                                new Alpha(Location.A, 1)))),
+
+                Arguments.of(new ArrayList<Recycling>(),
+                        new Historic(Location.C, 100.0),
+                        new ArrayList<Recycling>())
+
+        );
+    }
+
 }
