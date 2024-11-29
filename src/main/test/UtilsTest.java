@@ -4,19 +4,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.platform.commons.util.StringUtils;
 
-import java.sql.Array;
 import java.util.*;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UtilsTest {
-    private final Utils util = new Utils();
+    private Utils util;
     private static final Alpha alpha = new Alpha(Location.A, 1);
     private static final Beta beta = new Beta(Location.B, 2);
     private static final Gamma gamma = new Gamma(Location.C, 3);
