@@ -16,8 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UtilsTest {
-    private Utils util = new Utils();
-
+    private final Utils util = new Utils();
+    private static final Alpha alpha = new Alpha(Location.A, 1);
+    private static final Beta beta = new Beta(Location.B, 2);
+    private static final Gamma gamma = new Gamma(Location.C, 3);
 
     @ParameterizedTest
     @DisplayName("Finding Viable Centres With 3 options and has metallic")
@@ -28,7 +30,7 @@ class UtilsTest {
         //Act
         var response = util.findViableCentres(historicLocation, centers);
         //Assert
-        Assertions.assertEquals(response.size(), expectedResponse.size());
+        Assertions.assertEquals(response, expectedResponse);
     }
 
     @ParameterizedTest
@@ -123,22 +125,22 @@ class UtilsTest {
     private static Stream<Arguments> FindViableCenters() {
         return Stream.of(
                 Arguments.of(new ArrayList<Recycling>(Arrays.asList(
-                                new Beta(Location.B, 2),
-                                new Alpha(Location.A, 1),
-                                new Gamma(Location.C, 3))),
+                                alpha,
+                                beta,
+                                gamma)),
                         new Historic(Location.A, 1251.0),
                         new ArrayList<Recycling>(Arrays.asList(
-                                new Beta(Location.B, 2),
-                                new Alpha(Location.A, 1)))),
+                                alpha,
+                                beta))),
 
                 Arguments.of(new ArrayList<Recycling>(Arrays.asList(
-                                new Beta(Location.B, 2),
-                                new Alpha(Location.A, 1),
-                                new Gamma(Location.C, 3))),
+                               alpha,
+                                beta,
+                                gamma)),
                         new Historic(Location.B, 100.0),
                         new ArrayList<Recycling>(Arrays.asList(
-                                new Beta(Location.B, 2),
-                                new Alpha(Location.A, 1)))),
+                                alpha,
+                                beta))),
 
                 Arguments.of(new ArrayList<Recycling>(),
                         new Historic(Location.C, 100.0),
