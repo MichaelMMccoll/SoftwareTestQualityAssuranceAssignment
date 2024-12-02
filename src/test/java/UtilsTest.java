@@ -1,6 +1,7 @@
 import models.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -9,6 +10,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static net.bytebuddy.matcher.ElementMatchers.named;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UtilsTest {
@@ -17,8 +19,8 @@ class UtilsTest {
     private static final Beta beta = new Beta(Location.B, 2);
     private static final Gamma gamma = new Gamma(Location.C, 3);
 
-    @ParameterizedTest
-    @DisplayName("Finding Viable Centres With 3 options and has metallic")
+    @DisplayName("Find viable centers")
+    @ParameterizedTest(name = "{index} {1}")//name = "{index} {3}"
     @MethodSource("FindViableCenters")
     void findViableCentres(List<Recycling> centers, Historic historicLocation, List<Recycling> expectedResponse) {
         //Arrange
@@ -120,7 +122,8 @@ class UtilsTest {
 
     private static Stream<Arguments> FindViableCenters() {
         return Stream.of(
-                Arguments.of(new ArrayList<Recycling>(Arrays.asList(
+                Arguments.of(
+                        new ArrayList<Recycling>(Arrays.asList(
                                 alpha,
                                 beta,
                                 gamma)),
@@ -129,7 +132,8 @@ class UtilsTest {
                                 alpha,
                                 beta))),
 
-                Arguments.of(new ArrayList<Recycling>(Arrays.asList(
+                Arguments.of(
+                        new ArrayList<Recycling>(Arrays.asList(
                                alpha,
                                 beta,
                                 gamma)),
@@ -138,7 +142,8 @@ class UtilsTest {
                                 alpha,
                                 beta))),
 
-                Arguments.of(new ArrayList<Recycling>(),
+                Arguments.of(
+                        new ArrayList<Recycling>(),
                         new Historic(Location.C, 100.0),
                         new ArrayList<Recycling>())
 

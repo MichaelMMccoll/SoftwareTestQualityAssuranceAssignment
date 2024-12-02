@@ -1,49 +1,32 @@
+import models.Alpha;
+import models.Historic;
+import models.Location;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Stream;
+
+import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.powermock.api.mockito.PowerMockito.spy;
 
 class MainTest {
     private final String[] args = {};
 
     private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
-    private final List<String> configureScenario = new ArrayList<String>(
-                                                                Arrays.asList(
-                                                                        "Configuring scenario (enter number to select):\r",
-                                                                        "1. Add Historic.\r",
-                                                                        "2. Add Recycling Centres.\r",
-                                                                        "3. Run Scenario.\r"
-                                                                )
-    );
-    private final List<String> addHistoric = new ArrayList<String>(
-                                                            Arrays.asList(
-                                                                    "Creating a historic site...\r",
-                                                                    "Enter a location (A, B, or C):\r",
-                                                                    "Enter the initial waste quantity at the historic site (in meters cubed):\r"
-                                                            )
-    );
-    private final List<String> addRecycling = new ArrayList<String>(
-                                                            Arrays.asList(
-                                                                    "Creating a recycling centre...\r",
-                                                                    "Enter a location (A, B, or C):\r",
-                                                                    "Enter the number of years the recycling centre has been active for:\r",
-                                                                    "Enter the generation of the recycling centre (Alpha, Beta, or Gamma):\r",
-                                                                    "Recycling centre created. Would you like to create another recycling centre? (y/n)\r"
-                                                            )
-    );
-    private final List<String> runningScenario = new ArrayList<String>(
-                                                                Arrays.asList(
-                                                                        "Running scenario...\r",
-                                                                        "Scenario successfully completed. Results:\r"
-                                                                )
-    );
     private final List<String> exit = new ArrayList<String>(
                                                     Arrays.asList(
                                                             "Exiting...\r",
@@ -58,6 +41,18 @@ class MainTest {
                                                                     "3. Exit.\r"
                                                             )
 
+    );
+    private final List<String> collectLocation = new ArrayList<>(
+                                                            Arrays.asList(
+                                                                    "Enter a location (A, B, or C):\r"
+                                                            )
+    );
+    private final String collectGeneration = "Enter the generation of the recycling centre (Alpha, Beta, or Gamma):\r";
+    private final String collectGeneration_error = "Invalid choice. Please try again.\r";
+    private final List<String> collectLocation_error = new ArrayList<>(
+            Arrays.asList(
+                    "Invalid choice. Peeas try again.\r"
+            )
     );
     private final List<String> showAbout = new ArrayList<String>(
                                                         Arrays.asList(
@@ -80,7 +75,7 @@ class MainTest {
     }
 
     @Test
-    void Enter_About_Exit(){
+    void Enter_About_Exit_002(){
         //Arrange
         var expectedOutput = Stream.of(showAbout,showOptions,exit)
                 .flatMap(Collection::stream)
@@ -96,7 +91,7 @@ class MainTest {
     }
 
     @Test
-    void Enter_And_Exit() {
+    void Enter_And_Exit_001() {
     //Arrange
         var expectedOutput = Stream.of(showOptions,exit)
                 .flatMap(Collection::stream)
@@ -110,28 +105,101 @@ class MainTest {
         var output = Arrays.stream(outputStream.toString().split("\n")).toList();
         Assertions.assertTrue(output.containsAll(expectedOutput));
     }
-//    @Test
-//    void Running_basic_Scenario(){
-//        //Arrange
-//        Scanner scanner = Mockito.mock(Scanner.class);
-//        var expectedOutput = Stream.of(showOptions,
-//                                       exit,
-//                                       configureScenario,
-//                                       addHistoric,
-//                                       runningScenario,
-//                                       addRecycling)
-//                .flatMap(Collection::stream)
-//                .toList();
-//
-//        String input = "1 1";
-//        InputStream in = new ByteArrayInputStream(input.getBytes());
-//        System.setIn(in);
-//
-//        //Act
-//        Main.main(args);
-//        //Assert
-//
-//        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
-//        Assertions.assertTrue(output.containsAll(expectedOutput));
-//    }
+
+    @ParameterizedTest
+    @MethodSource("collectLocation")
+    void Collect_Location_A_to_C_003_to_005(String input, Location location) throws Exception {
+        //Arrange
+        var showOptionsMethod = Main.class.getDeclaredMethod("collectLocation");
+        showOptionsMethod.setAccessible(true);
+
+        var in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        //Act
+        var response = (Location) showOptionsMethod.invoke(null);
+
+        //Assert
+        Assertions.assertEquals(location, response);
+        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
+        Assertions.assertTrue(output.containsAll(collectLocation));
+    }
+
+    @Test
+    void Collect_Location_Invalid_Input_006() throws Exception {
+        //Arrange
+        var expectedOutput = Stream.of(collectLocation,
+                                       collectLocation_error)
+                .flatMap(Collection::stream)
+                .toList();
+        var showOptionsMethod = Main.class.getDeclaredMethod("collectLocation");
+        showOptionsMethod.setAccessible(true);
+
+        var input = "D C";
+        var in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        //Act
+        var response = (Location) showOptionsMethod.invoke(null);
+
+        //Assert
+        Assertions.assertEquals(Location.C, response);
+        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
+        Assertions.assertTrue(output.containsAll(expectedOutput));
+    }
+
+    @ParameterizedTest
+    @MethodSource("collectGeneration")
+    void Collect_Generation_Alpha_to_Gamma_007_to_009(String input) throws Exception {
+        //Arrange
+        var showOptionsMethod = Main.class.getDeclaredMethod("collectGeneration");
+        showOptionsMethod.setAccessible(true);
+
+        var in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        //Act
+        var response = (String) showOptionsMethod.invoke(null);
+
+        //Assert
+        Assertions.assertEquals(input, response);
+        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
+        Assertions.assertTrue(output.contains(collectGeneration));
+    }
+
+    @Test
+    void CollectGenerationTest_With_Wrong_Input() throws Exception {
+        //Arrange
+        var expectedOutput = Stream.of(collectGeneration,
+                                       collectGeneration_error)
+                .toList();
+        var showOptionsMethod = Main.class.getDeclaredMethod("collectGeneration");
+        showOptionsMethod.setAccessible(true);
+
+        var input = "D Alpha";
+        var in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        //Act
+        var response = (String) showOptionsMethod.invoke(null);
+
+        //Assert
+        Assertions.assertEquals("Alpha", response);
+        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
+        Assertions.assertTrue(output.containsAll(expectedOutput));
+    }
+
+
+    private static Stream<Arguments> collectLocation() {
+        return Stream.of(
+                Arguments.of("A",Location.A),
+                Arguments.of("B",Location.B),
+                Arguments.of("C",Location.C));
+    }
+    private static Stream<Arguments> collectGeneration() {
+        return Stream.of(
+                Arguments.of("Alpha"),
+                Arguments.of("Beta"),
+                Arguments.of("Gama"));
+    }
 }

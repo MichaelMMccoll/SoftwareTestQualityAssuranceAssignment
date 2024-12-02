@@ -94,3 +94,34 @@ The total duration is therefore: 5250.00 hours.
 End
 ----------------------------------------
 ```
+
+### Appendix H: Set Location
+
+```
+Creating a historic site...
+Enter a location (A, B, or C):
+```
+
+### Appendix I: Set Location
+
+```
+Enter the initial waste quantity at the historic site (in meters cubed):
+```
+
+### Appendix J: Set Location
+
+```
+Invalid choice. Peeas try again.
+```
+
+### Appendix K: Set Location
+
+```
+Enter the generation of the recycling centre (Alpha, Beta, or Gamma):
+```
+
+### Appendix L: Set Location
+
+```
+Recycling centre created. Would you like to create another recycling centre? (y/n)
+```
