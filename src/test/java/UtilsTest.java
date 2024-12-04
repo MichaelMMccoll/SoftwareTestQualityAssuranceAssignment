@@ -82,7 +82,7 @@ class UtilsTest {
 
     private static Stream<Arguments> CalculateTravelDuration() {
         return Stream.of(
-                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.A, 700.0), 63.0),
+                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.A, 700.0), 35.0),
                 Arguments.of(new Alpha(Location.A, 1), new Historic(Location.A, 1251.0), 63.0),
                 Arguments.of(new Alpha(Location.A, 1), new Historic(Location.B, 1251.0), 126.0),
                 Arguments.of(new Alpha(Location.A, 1), new Historic(Location.C, 1251.0), 252.0)
