@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static net.bytebuddy.matcher.ElementMatchers.named;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UtilsTest {
@@ -60,7 +59,7 @@ class UtilsTest {
     @ParameterizedTest
     @DisplayName("Calculates travel duration")
     @MethodSource("CalculateTravelDuration")
-    void calculateTravelDuration(Recycling type, Historic location, Double expectedResponse) {
+    void calculateTravelDuration_Tests(Recycling type, Historic location, Double expectedResponse) {
         //Arrange
         //Act
         var response = util.calculateTravelDuration(location, type);
@@ -68,10 +67,10 @@ class UtilsTest {
         assertEquals(response, expectedResponse);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest()
     @DisplayName("Calculates process duration")
     @MethodSource("CalculateProcessDuration")
-    void calculateProcessDuration(Recycling type, Historic location, Double expectedResponse) {
+    void calculateProcessDuration_Tests(Recycling type, Historic location, Double expectedResponse) {
         //Arrange
         //Act
         var response = util.calculateProcessDuration(location, type);
