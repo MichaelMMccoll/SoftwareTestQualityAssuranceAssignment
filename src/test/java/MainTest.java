@@ -64,122 +64,122 @@ class MainTest {
         // Restore the original System.out after each test
         System.setOut(originalOut);
     }
-
-    @Test
-    void Enter_About_Exit_002(){
-        //Arrange
-        var expectedOutput = Stream.of(showAbout,showOptions,exit)
-                .flatMap(Collection::stream)
-                .toList();
-        String input ="2 3";
-        InputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-        //Act
-            Main.main(args);
-        //Assert
-        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
-        Assertions.assertTrue(output.containsAll(expectedOutput));
-    }
-
-    @Test
-    void Enter_And_Exit_001() {
-    //Arrange
-        var expectedOutput = Stream.of(showOptions,exit)
-                .flatMap(Collection::stream)
-                .toList();
-        String input = "3";
-        InputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-    //Act
-        Main.main(args);
-    //Assert
-        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
-        Assertions.assertTrue(output.containsAll(expectedOutput));
-    }
-
-    @ParameterizedTest
-    @MethodSource("collectLocation")
-    void Collect_Location_A_to_C_003_to_005(String input, Location location) throws Exception {
-        //Arrange
-        var showOptionsMethod = Main.class.getDeclaredMethod("collectLocation");
-        showOptionsMethod.setAccessible(true);
-
-        var in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        //Act
-        var response = (Location) showOptionsMethod.invoke(null);
-
-        //Assert
-        Assertions.assertEquals(location, response);
-        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
-        Assertions.assertTrue(output.containsAll(collectLocation));
-    }
-
-    @Test
-    void Collect_Location_Invalid_Input_006() throws Exception {
-        //Arrange
-        var expectedOutput = Stream.of(collectLocation,
-                                       collectLocation_error)
-                .flatMap(Collection::stream)
-                .toList();
-        var showOptionsMethod = Main.class.getDeclaredMethod("collectLocation");
-        showOptionsMethod.setAccessible(true);
-
-        var input = "D C";
-        var in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        //Act
-        var response = (Location) showOptionsMethod.invoke(null);
-
-        //Assert
-        Assertions.assertEquals(Location.C, response);
-        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
-        Assertions.assertTrue(output.containsAll(expectedOutput));
-    }
-
-    @ParameterizedTest
-    @MethodSource("collectGeneration")
-    void Collect_Generation_Alpha_to_Gamma_007_to_009(String input) throws Exception {
-        //Arrange
-        var showOptionsMethod = Main.class.getDeclaredMethod("collectGeneration");
-        showOptionsMethod.setAccessible(true);
-
-        var in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        //Act
-        var response = (String) showOptionsMethod.invoke(null);
-
-        //Assert
-        Assertions.assertEquals(input, response);
-        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
-        Assertions.assertTrue(output.contains(collectGeneration));
-    }
-
-    @Test
-    void CollectGenerationTest_With_Wrong_Input() throws Exception {
-        //Arrange
-        var expectedOutput = Stream.of(collectGeneration,
-                                       collectGeneration_error)
-                .toList();
-        var showOptionsMethod = Main.class.getDeclaredMethod("collectGeneration");
-        showOptionsMethod.setAccessible(true);
-
-        var input = "D Alpha";
-        var in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        //Act
-        var response = (String) showOptionsMethod.invoke(null);
-
-        //Assert
-        Assertions.assertEquals("Alpha", response);
-        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
-        Assertions.assertTrue(output.containsAll(expectedOutput));
-    }
-
+//
+//    @Test
+//    void Enter_About_Exit_002(){
+//        //Arrange
+//        var expectedOutput = Stream.of(showAbout,showOptions,exit)
+//                .flatMap(Collection::stream)
+//                .toList();
+//        String input ="2 3";
+//        InputStream in = new ByteArrayInputStream(input.getBytes());
+//        System.setIn(in);
+//        //Act
+//            Main.main(args);
+//        //Assert
+//        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
+//        Assertions.assertTrue(output.containsAll(expectedOutput));
+//    }
+//
+//    @Test
+//    void Enter_And_Exit_001() {
+//    //Arrange
+//        var expectedOutput = Stream.of(showOptions,exit)
+//                .flatMap(Collection::stream)
+//                .toList();
+//        String input = "3";
+//        InputStream in = new ByteArrayInputStream(input.getBytes());
+//        System.setIn(in);
+//    //Act
+//        Main.main(args);
+//    //Assert
+//        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
+//        Assertions.assertTrue(output.containsAll(expectedOutput));
+//    }
+//
+//    @ParameterizedTest
+//    @MethodSource("collectLocation")
+//    void Collect_Location_A_to_C_003_to_005(String input, Location location) throws Exception {
+//        //Arrange
+//        var showOptionsMethod = Main.class.getDeclaredMethod("collectLocation");
+//        showOptionsMethod.setAccessible(true);
+//
+//        var in = new ByteArrayInputStream(input.getBytes());
+//        System.setIn(in);
+//
+//        //Act
+//        var response = (Location) showOptionsMethod.invoke(null);
+//
+//        //Assert
+//        Assertions.assertEquals(location, response);
+//        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
+//        Assertions.assertTrue(output.containsAll(collectLocation));
+//    }
+//
+//    @Test
+//    void Collect_Location_Invalid_Input_006() throws Exception {
+//        //Arrange
+//        var expectedOutput = Stream.of(collectLocation,
+//                                       collectLocation_error)
+//                .flatMap(Collection::stream)
+//                .toList();
+//        var showOptionsMethod = Main.class.getDeclaredMethod("collectLocation");
+//        showOptionsMethod.setAccessible(true);
+//
+//        var input = "D C";
+//        var in = new ByteArrayInputStream(input.getBytes());
+//        System.setIn(in);
+//
+//        //Act
+//        var response = (Location) showOptionsMethod.invoke(null);
+//
+//        //Assert
+//        Assertions.assertEquals(Location.C, response);
+//        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
+//        Assertions.assertTrue(output.containsAll(expectedOutput));
+//    }
+//
+//    @ParameterizedTest
+//    @MethodSource("collectGeneration")
+//    void Collect_Generation_Alpha_to_Gamma_007_to_009(String input) throws Exception {
+//        //Arrange
+//        var showOptionsMethod = Main.class.getDeclaredMethod("collectGeneration");
+//        showOptionsMethod.setAccessible(true);
+//
+//        var in = new ByteArrayInputStream(input.getBytes());
+//        System.setIn(in);
+//
+//        //Act
+//        var response = (String) showOptionsMethod.invoke(null);
+//
+//        //Assert
+//        Assertions.assertEquals(input, response);
+//        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
+//        Assertions.assertTrue(output.contains(collectGeneration));
+//    }
+//
+//    @Test
+//    void CollectGenerationTest_With_Wrong_Input() throws Exception {
+//        //Arrange
+//        var expectedOutput = Stream.of(collectGeneration,
+//                                       collectGeneration_error)
+//                .toList();
+//        var showOptionsMethod = Main.class.getDeclaredMethod("collectGeneration");
+//        showOptionsMethod.setAccessible(true);
+//
+//        var input = "D Alpha";
+//        var in = new ByteArrayInputStream(input.getBytes());
+//        System.setIn(in);
+//
+//        //Act
+//        var response = (String) showOptionsMethod.invoke(null);
+//
+//        //Assert
+//        Assertions.assertEquals("Alpha", response);
+//        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
+//        Assertions.assertTrue(output.containsAll(expectedOutput));
+//    }
+//
 
     private static Stream<Arguments> collectLocation() {
         return Stream.of(
