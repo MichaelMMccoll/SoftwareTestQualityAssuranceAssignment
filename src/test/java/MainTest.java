@@ -64,39 +64,39 @@ class MainTest {
         // Restore the original System.out after each test
         System.setOut(originalOut);
     }
-//
-//    @Test
-//    void Enter_About_Exit_002(){
-//        //Arrange
-//        var expectedOutput = Stream.of(showAbout,showOptions,exit)
-//                .flatMap(Collection::stream)
-//                .toList();
-//        String input ="2 3";
-//        InputStream in = new ByteArrayInputStream(input.getBytes());
-//        System.setIn(in);
-//        //Act
-//            Main.main(args);
-//        //Assert
-//        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
-//        Assertions.assertTrue(output.containsAll(expectedOutput));
-//    }
-//
-//    @Test
-//    void Enter_And_Exit_001() {
-//    //Arrange
-//        var expectedOutput = Stream.of(showOptions,exit)
-//                .flatMap(Collection::stream)
-//                .toList();
-//        String input = "3";
-//        InputStream in = new ByteArrayInputStream(input.getBytes());
-//        System.setIn(in);
-//    //Act
-//        Main.main(args);
-//    //Assert
-//        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
-//        Assertions.assertTrue(output.containsAll(expectedOutput));
-//    }
-//
+
+    @Test
+    void Enter_About_Exit_002(){
+        //Arrange
+        var expectedOutput = Stream.of(showAbout,showOptions,exit)
+                .flatMap(Collection::stream)
+                .toList();
+        String input ="2 3";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        //Act
+            Main.main(args);
+        //Assert
+        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
+        Assertions.assertTrue(output.containsAll(expectedOutput));
+    }
+
+    @Test
+    void Enter_And_Exit_001() {
+    //Arrange
+        var expectedOutput = Stream.of(showOptions,exit)
+                .flatMap(Collection::stream)
+                .toList();
+        String input = "3";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+    //Act
+        Main.main(args);
+    //Assert
+        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
+        Assertions.assertTrue(output.containsAll(expectedOutput));
+    }
+
 //    @ParameterizedTest
 //    @MethodSource("collectLocation")
 //    void Collect_Location_A_to_C_003_to_005(String input, Location location) throws Exception {
@@ -179,7 +179,7 @@ class MainTest {
 //        var output = Arrays.stream(outputStream.toString().split("\n")).toList();
 //        Assertions.assertTrue(output.containsAll(expectedOutput));
 //    }
-//
+
 
     private static Stream<Arguments> collectLocation() {
         return Stream.of(
