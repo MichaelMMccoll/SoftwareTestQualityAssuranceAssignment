@@ -44,18 +44,18 @@ class UtilsTest {
 
     //Test crashes when no Recycling center is given
     //This should fail
-//    @Test
-//    @DisplayName("Finding optimal center when there are 0 types")
-//    void Find_Optimal_Center_No_Recycling_016() {
-//        //Arrange
-//        var recyclingList = new ArrayList<Recycling>();
-//        var aa = new Historic(Location.C, 1251.0);
-//        var errorMessage = "";
-//        //Act
-//        var response = util.findOptimalCentre(aa, recyclingList);
-//        //Assert
-//        //assertThrows(NoSuchElementException.class, () -> util.findOptimalCentre(aa,recyclingList));
-//    }
+    @Test
+    @DisplayName("Finding optimal center when there are 0 types")
+    void Find_Optimal_Center_No_Recycling_016() {
+        //Arrange
+        var recyclingList = new ArrayList<Recycling>();
+        var aa = new Historic(Location.C, 1251.0);
+
+        //Act
+        var response = util.findOptimalCentre(aa, recyclingList);
+        //Assert
+        //assertThrows(NoSuchElementException.class, () -> util.findOptimalCentre(aa,recyclingList));
+    }
 
     @ParameterizedTest
     @DisplayName("Calculates travel duration")
@@ -93,8 +93,8 @@ class UtilsTest {
         return Stream.of(
                 Arguments.of(new Alpha(Location.A, 1), new Historic(Location.A, 1251.0), 1251.0),
                 Arguments.of(new Alpha(Location.A, 1), new Historic(Location.B, 1000.0), 1000.0),
-                Arguments.of(new Beta(Location.B, 1), new Historic(Location.C, 1000.0), 666.6666666666666),
-                Arguments.of(new Gamma(Location.C, 1), new Historic(Location.C, 1000.0), 583.3333333333333)
+                Arguments.of(new Beta(Location.B, 1), new Historic(Location.C, 1000.0), 666.67),
+                Arguments.of(new Gamma(Location.C, 1), new Historic(Location.C, 1000.0), 583.34)
         );
     }
 

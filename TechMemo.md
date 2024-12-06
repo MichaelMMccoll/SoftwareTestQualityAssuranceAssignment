@@ -102,25 +102,25 @@ Creating a historic site...
 Enter a location (A, B, or C):
 ```
 
-### Appendix I: Set Location
+### Appendix I: Waste quantity
 
 ```
 Enter the initial waste quantity at the historic site (in meters cubed):
 ```
 
-### Appendix J: Set Location
+### Appendix J: Error 
 
 ```
 Invalid choice. Peeas try again.
 ```
 
-### Appendix K: Set Location
+### Appendix K: Set Generation
 
 ```
 Enter the generation of the recycling centre (Alpha, Beta, or Gamma):
 ```
 
-### Appendix L: Set Location
+### Appendix L: Create another recycling center 
 
 ```
 Recycling centre created. Would you like to create another recycling centre? (y/n)
