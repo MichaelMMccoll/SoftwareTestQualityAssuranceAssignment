@@ -10,10 +10,8 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UtilsTest {
-    private Utils util;
     private static final Alpha alpha = new Alpha(Location.A, 1);
     private static final Beta beta = new Beta(Location.B, 2);
     private static final Gamma gamma = new Gamma(Location.C, 3);
@@ -23,9 +21,8 @@ class UtilsTest {
     @MethodSource("FindViableCenters")
     void findViableCentres(List<Recycling> centers, Historic historicLocation, List<Recycling> expectedResponse) {
         //Arrange
-        //var list =  new ArrayList<Recycling>(centers);
         //Act
-        var response = util.findViableCentres(historicLocation, centers);
+        var response = Utils.findViableCentres(historicLocation, centers);
         //Assert
         Assertions.assertEquals(response, expectedResponse);
     }
@@ -36,7 +33,7 @@ class UtilsTest {
     void findOptimalCentre(List<Recycling> centers, Historic historicLocation, Integer arrayPlace) {
         //Arrange
         //Act
-        var response = util.findOptimalCentre(historicLocation, centers);
+        var response = Utils.findOptimalCentre(historicLocation, centers);
 
         //Assert
         assertEquals(response, centers.get(arrayPlace));
@@ -52,10 +49,9 @@ class UtilsTest {
         var aa = new Historic(Location.C, 1251.0);
 
         //Act
-        var response = util.findOptimalCentre(aa, recyclingList);
+        Utils.findOptimalCentre(aa, recyclingList);
         //Assert
-        //assertThrows(NoSuchElementException.class, () -> util.findOptimalCentre(aa,recyclingList));
-    }
+     }
 
     @ParameterizedTest
     @DisplayName("Calculates travel duration")
@@ -63,7 +59,7 @@ class UtilsTest {
     void calculateTravelDuration_Tests(Recycling type, Historic location, Double expectedResponse) {
         //Arrange
         //Act
-        var response = util.calculateTravelDuration(location, type);
+        var response = Utils.calculateTravelDuration(location, type);
         //Assert
         assertEquals(response, expectedResponse);
     }
@@ -74,7 +70,7 @@ class UtilsTest {
     void calculateProcessDuration_Tests(Recycling type, Historic location, Double expectedResponse) {
         //Arrange
         //Act
-        var response = util.calculateProcessDuration(location, type);
+        var response = Utils.calculateProcessDuration(location, type);
         //Assert
         assertEquals(response, expectedResponse);
     }
@@ -100,19 +96,19 @@ class UtilsTest {
 
     private static Stream<Arguments> FindOptimalCenters() {
         return Stream.of(
-                Arguments.of(new ArrayList<Recycling>(Arrays.asList(
+                Arguments.of(new ArrayList<>(Arrays.asList(
                                 new Beta(Location.B, 2),
                                 new Alpha(Location.A, 1),
                                 new Gamma(Location.C, 3))),
                         new Historic(Location.A, 1251.0),
                         1),
-                Arguments.of(new ArrayList<Recycling>(Arrays.asList(
+                Arguments.of(new ArrayList<>(Arrays.asList(
                                 new Beta(Location.B, 2),
                                 new Alpha(Location.A, 1),
                                 new Gamma(Location.C, 3))),
                         new Historic(Location.B, 1251.0),
                         1),
-                Arguments.of(new ArrayList<Recycling>(Arrays.asList(
+                Arguments.of(new ArrayList<>(Arrays.asList(
                                 new Beta(Location.B, 2),
                                 new Alpha(Location.A, 1),
                                 new Gamma(Location.C, 3))),
@@ -124,22 +120,22 @@ class UtilsTest {
     private static Stream<Arguments> FindViableCenters() {
         return Stream.of(
                 Arguments.of(
-                        new ArrayList<Recycling>(Arrays.asList(
+                        new ArrayList<>(Arrays.asList(
                                 alpha,
                                 beta,
                                 gamma)),
                         new Historic(Location.A, 1251.0),
-                        new ArrayList<Recycling>(Arrays.asList(
+                        new ArrayList<>(Arrays.asList(
                                 alpha,
                                 beta))),
 
                 Arguments.of(
-                        new ArrayList<Recycling>(Arrays.asList(
-                               alpha,
+                        new ArrayList<>(Arrays.asList(
+                                alpha,
                                 beta,
                                 gamma)),
                         new Historic(Location.B, 100.0),
-                        new ArrayList<Recycling>(Arrays.asList(
+                        new ArrayList<>(Arrays.asList(
                                 alpha,
                                 beta))),
 
