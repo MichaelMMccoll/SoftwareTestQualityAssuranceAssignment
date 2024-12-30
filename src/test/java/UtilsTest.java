@@ -17,9 +17,9 @@ class UtilsTest {
     private static final Gamma gamma = new Gamma(Location.C, 3);
 
     @DisplayName("Find viable centers")
-    @ParameterizedTest(name = "{index} {1}")//name = "{index} {3}"
+    @ParameterizedTest(name = "{index} {0}")//name = "{index} {3}"
     @MethodSource("FindViableCenters")
-    void findViableCentres(List<Recycling> centers, Historic historicLocation, List<Recycling> expectedResponse) {
+    void findViableCentres(String Title, List<Recycling> centers, Historic historicLocation, List<Recycling> expectedResponse) {
         //Arrange
         //Act
         var response = Utils.findViableCentres(historicLocation, centers);
@@ -27,10 +27,10 @@ class UtilsTest {
         Assertions.assertEquals(response, expectedResponse);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{index} {0}")//name = "{index} {3}"
     @DisplayName("Finding optimal center with all 3 types")
     @MethodSource("FindOptimalCenters")
-    void findOptimalCentre(List<Recycling> centers, Historic historicLocation, Integer arrayPlace) {
+    void findOptimalCentre(String Title, List<Recycling> centers, Historic historicLocation, Integer arrayPlace) {
         //Arrange
         //Act
         var response = Utils.findOptimalCentre(historicLocation, centers);
@@ -53,10 +53,10 @@ class UtilsTest {
         //Assert
      }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{index} {0}")
     @DisplayName("Calculates travel duration")
     @MethodSource("CalculateTravelDuration")
-    void calculateTravelDuration_Tests(Recycling type, Historic location, Double expectedResponse) {
+    void calculateTravelDuration_Tests(String Title, Recycling type, Historic location, Double expectedResponse) {
         //Arrange
         //Act
         var response = Utils.calculateTravelDuration(location, type);
@@ -64,10 +64,10 @@ class UtilsTest {
         assertEquals(response, expectedResponse);
     }
 
-    @ParameterizedTest()
+    @ParameterizedTest(name = "{index} {0}")
     @DisplayName("Calculates process duration")
     @MethodSource("CalculateProcessDuration")
-    void calculateProcessDuration_Tests(Recycling type, Historic location, Double expectedResponse) {
+    void calculateProcessDuration_Tests(String Title, Recycling type, Historic location, Double expectedResponse) {
         //Arrange
         //Act
         var response = Utils.calculateProcessDuration(location, type);
@@ -78,37 +78,40 @@ class UtilsTest {
 
     private static Stream<Arguments> CalculateTravelDuration() {
         return Stream.of(
-                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.A, 700.0), 35.0),
-                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.A, 1251.0), 63.0),
-                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.B, 1251.0), 126.0),
-                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.C, 1251.0), 252.0)
+                Arguments.of("A to A with 700 waste",new Alpha(Location.A, 1), new Historic(Location.A, 700.0), 35.0),
+                Arguments.of("A to A with 1251 waste",new Alpha(Location.A, 1), new Historic(Location.A, 1251.0), 63.0),
+                Arguments.of("A to B with 1251 waste",new Alpha(Location.A, 1), new Historic(Location.B, 1251.0), 126.0),
+                Arguments.of("A to C with 1251 waste",new Alpha(Location.A, 1), new Historic(Location.C, 1251.0), 252.0)
         );
     }
 
     private static Stream<Arguments> CalculateProcessDuration() {
         return Stream.of(
-                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.A, 1251.0), 1251.0),
-                Arguments.of(new Alpha(Location.A, 1), new Historic(Location.B, 1000.0), 1000.0),
-                Arguments.of(new Beta(Location.B, 1), new Historic(Location.C, 1000.0), 666.67),
-                Arguments.of(new Gamma(Location.C, 1), new Historic(Location.C, 1000.0), 583.34)
+                Arguments.of("A to A with 1251 waste",new Alpha(Location.A, 1), new Historic(Location.A, 1251.0), 1251.0),
+                Arguments.of("A to B with 1000 waste",new Alpha(Location.A, 1), new Historic(Location.B, 1000.0), 1000.0),
+                Arguments.of("B to C with 1000 waste",new Beta(Location.B, 1), new Historic(Location.C, 1000.0), 666.67),
+                Arguments.of("C to C with 1000 waste",new Gamma(Location.C, 1), new Historic(Location.C, 1000.0), 583.34)
         );
     }
 
     private static Stream<Arguments> FindOptimalCenters() {
         return Stream.of(
-                Arguments.of(new ArrayList<>(Arrays.asList(
+                Arguments.of("Find optimal Center Location A",
+                        new ArrayList<>(Arrays.asList(
                                 new Beta(Location.B, 2),
                                 new Alpha(Location.A, 1),
                                 new Gamma(Location.C, 3))),
                         new Historic(Location.A, 1251.0),
                         1),
-                Arguments.of(new ArrayList<>(Arrays.asList(
+                Arguments.of("Find optimal Center Location B",
+                        new ArrayList<>(Arrays.asList(
                                 new Beta(Location.B, 2),
                                 new Alpha(Location.A, 1),
                                 new Gamma(Location.C, 3))),
                         new Historic(Location.B, 1251.0),
                         1),
-                Arguments.of(new ArrayList<>(Arrays.asList(
+                Arguments.of("Find optimal Center Location C",
+                        new ArrayList<>(Arrays.asList(
                                 new Beta(Location.B, 2),
                                 new Alpha(Location.A, 1),
                                 new Gamma(Location.C, 3))),
@@ -120,6 +123,7 @@ class UtilsTest {
     private static Stream<Arguments> FindViableCenters() {
         return Stream.of(
                 Arguments.of(
+                        "Find Viable Center Location A",
                         new ArrayList<>(Arrays.asList(
                                 alpha,
                                 beta,
@@ -130,6 +134,7 @@ class UtilsTest {
                                 beta))),
 
                 Arguments.of(
+                        "Find Viable Center Location B",
                         new ArrayList<>(Arrays.asList(
                                 alpha,
                                 beta,
@@ -140,6 +145,7 @@ class UtilsTest {
                                 beta))),
 
                 Arguments.of(
+                        "Find Viable Center Location C",
                         new ArrayList<Recycling>(),
                         new Historic(Location.C, 100.0),
                         new ArrayList<Recycling>())
